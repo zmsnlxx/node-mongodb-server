@@ -9,42 +9,30 @@ const moment = require('moment');
 
 // 文章新增
 router.post('/api/article/addArticle', (req, res) => {
-    const abstract = util.getTrimHtml(req.body.contentMD).html;
     const newArticle = new db.articleInfo({
-        id: util.setRandomId(),
-        title: req.body.title,
-        time: moment().format("YYYY-MM-DD"),
-        tags: req.body.tags,
-        content: req.body.content, // 转换过后的html
-        contentMD: req.body.contentMD, // markdown
-        abstract: abstract.replace(/[&\|\\\*^%$#@\-]/g, ""), // 文章摘要
-        titleImg: util.getArticleImage(req.body.contentMD), // 文章图片显示
+        id: util.setRandomId(),         // 文章id
+        title: req.body.title,          // 文章标题
+        abstract: req.body.abstract,    // 文章摘要
+        createdTime: moment().format('YYYY-MM-DD HH:mm'),     // 创建时间
+        tags: req.body.tags,            // 文章分类
+        content: req.body.content,      // 文章内容
+        img: req.body.img,              // 文章图片显示
+        contentMD: req.body.contentMD   //
     });
     newArticle.save().then(async (req) => {
         const data = await db.articleInfo.find();
         if (!_.isEmpty(req)) {
             res.send({
                 code: 0,
-                data: {
-                    message: "创建文章成功!",
-                    data,
-                }
-            })
-        } else {
-            res.send({
-                code: 1,
-                data: {
-                    message: "创建文章失败!",
-                    data: []
-                },
+                data
             })
         }
     })
 });
 
-// 获取所有文章
-router.get('/api/article/getArticle', async (req, res) => {
-    const articleArr = await util.getArticle();
+// 获取分类文章
+router.post('/api/article/getArticle', async (req, res) => {
+    const articleArr = await util.getArticle(req.body.id);
     if (_.isEmpty(articleArr)) {
         res.send({
             code: 1,
@@ -58,48 +46,58 @@ router.get('/api/article/getArticle', async (req, res) => {
     }
 });
 
-// 删除文章
-router.post('/api/article/deleteArticle', async (req, res) => {
-    const data = await db.articleInfo.deleteOne({_id: req.body._id});
-    if (data.ok === 1) {
-        const arr = await db.articleInfo.find();
-        console.log(arr);
+// 获取指定文章详情
+router.post('/api/article/details', async (req, res) => {
+    const articleDetails = await db.articleInfo.findOne({id:req.body.id});
+    if (_.isEmpty(articleDetails)) {
         res.send({
-            code: 0,
-            data: {
-                message: '删除成功!',
-                data: arr
-            }
+            code: 1,
+            data: [],
         })
     } else {
         res.send({
-            code: 1,
-            data: {
-                message: '删除失败!'
-            }
+            code: 0,
+            data: articleDetails
+        })
+    }
+
+});
+
+// 文章删除
+router.post('/api/article/deleteArticle', async (req, res) => {
+    const data = await db.articleInfo.deleteOne({id: req.body.articleId});
+    if (data.ok === 1) {
+        const data = await util.getArticle(req.body.classId);
+        res.send({
+            code: 0,
+            data
+        })
+    } else {
+        res.send({
+            code: 404,
+            data: '删除失败!'
         })
     }
 });
 
+// 编辑文章
 const updateArticle = async (req) => {
-    const {_id, title, updateTime, content, contentMD, tags, on} = req.body;
-    const abstract = util.getTrimHtml(contentMD).html;
-    if (on) return await db.articleInfo.update({_id}, {
+    const {id, abstract, title, img, content, contentMD, tags} = req.body;
+    return await db.articleInfo.update({id}, {
         $set: {
+            abstract,
             title,
-            updateTime,
+            img,
+            updateTime: moment().format('YYYY-MM-DD HH:mm'),
             content,
             contentMD,
-            titleImg: util.getArticleImage(contentMD),
-            abstract: abstract.replace(/[&\|\\\*^%$#@\-]/g, ""),
+            tags
         }
     });
-    return await db.articleInfo.update({_id}, {$set: {tags}})
 };
 
 // 更新文章（更新内容包含文章标题/更新时间/更新内容/文章图片/文章摘要）
 router.post('/api/article/updateArticle', async (req, res) => {
-    console.log(util.getTrimHtml(req.body.contentMD));
     await updateArticle(req).then(async req => {
         if (req.ok === 1) {
             const data = await db.articleInfo.find();
@@ -109,8 +107,8 @@ router.post('/api/article/updateArticle', async (req, res) => {
             })
         } else {
             res.send({
-                code: 1,
-                data,
+                code: 404,
+                data: '编辑失败',
             })
         }
     })
