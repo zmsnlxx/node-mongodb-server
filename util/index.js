@@ -1,4 +1,6 @@
 const db = require("../db");
+const moment = require('moment');
+
 
 // 自定义函数方法:
 // cookie编码程序
@@ -11,34 +13,47 @@ function CodeCookie(str) {
     return strRtn
 }
 
+// 随机id
 function setRandomId() {
     return Date.now() + "" + Math.floor(Math.random() * 10000);
 }
 
+// 获取指定分类的文章
 function getArticle(params) {
     return db.articleInfo.find({tags:params})
 }
 
+// 获取所有文章分类
 function getArticleClass() {
     return db.articleClassInfo.find()
 }
 
-/**
- * 过滤字符串函数
- **/
-function filterStr(str) {
-    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
-    let specialStr = "";
-    for (let i = 0; i < str.length; i++) {
-        specialStr += str.substr(i, 1).replace(pattern, '');
-    }
-    return specialStr;
+// 获取所有文章
+function getAllArticle() {
+    return db.articleInfo.find()
+}
+
+// 编辑文章
+async function updateArticle(req) {
+    const {id, abstract, title, img, content, contentMD, tags} = req.body;
+    return await db.articleInfo.update({id}, {
+        $set: {
+            abstract,
+            title,
+            img,
+            updateTime: moment().format('YYYY-MM-DD HH:mm'),
+            content,
+            contentMD,
+            tags
+        }
+    });
 }
 
 module.exports = {
     CodeCookie,
     setRandomId,
     getArticle,
-    filterStr,
     getArticleClass,
+    updateArticle,
+    getAllArticle
 };

@@ -1,4 +1,4 @@
-// 评论接口
+// 文章分类接口
 const express = require("express");
 const router = express.Router();
 const db = require("../db");

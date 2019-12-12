@@ -23,7 +23,12 @@ const articleSchema = new mongoose.Schema({
     createdTime: String,   // 创建时间
     updateTime: String,     // 更新时间
     abstract: String,       // 摘要
-    tags: String,           // 分类
+    categoryName: String,           // 分类name
+    categoryId: String, // 分类id
+    tagName: Array,    // 标签name
+    tagId: Array,      // 标签id
+    visitNum: Number,   // 访问量
+    fabulousNum: Number,    // 点赞数
     img: String, // 文章图片
     content: String, // 转换过后的html
     contentMD: String // markdown

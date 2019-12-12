@@ -1,4 +1,4 @@
-// 评论接口
+// 文章接口
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
@@ -14,10 +14,16 @@ router.post('/api/article/addArticle', (req, res) => {
         title: req.body.title,          // 文章标题
         abstract: req.body.abstract,    // 文章摘要
         createdTime: moment().format('YYYY-MM-DD HH:mm'),     // 创建时间
-        tags: req.body.tags,            // 文章分类
         content: req.body.content,      // 文章内容
         img: req.body.img,              // 文章图片显示
-        contentMD: req.body.contentMD   //
+        contentMD: req.body.contentMD,   //
+
+        categoryName: req.body.categoryName,           // 分类name
+        categoryId: req.body.categoryId, // 分类id
+        tagName: req.body.tagName,    // 标签name
+        tagId: req.body.tagId,      // 标签id
+        visitNum: 0,   // 访问量
+        fabulousNum: 0,    // 点赞数
     });
     newArticle.save().then(async (req) => {
         const data = await db.articleInfo.find();
@@ -31,8 +37,8 @@ router.post('/api/article/addArticle', (req, res) => {
 });
 
 // 获取分类文章
-router.post('/api/article/getArticle', async (req, res) => {
-    const articleArr = await util.getArticle(req.body.id);
+router.get('/api/article/getArticle', async (req, res) => {
+    const articleArr = await util.getArticle(req.query.id);
     if (_.isEmpty(articleArr)) {
         res.send({
             code: 1,
@@ -47,8 +53,8 @@ router.post('/api/article/getArticle', async (req, res) => {
 });
 
 // 获取指定文章详情
-router.post('/api/article/details', async (req, res) => {
-    const articleDetails = await db.articleInfo.findOne({id:req.body.id});
+router.get('/api/article/details', async (req, res) => {
+    const articleDetails = await db.articleInfo.findOne({id:req.query.id});
     if (_.isEmpty(articleDetails)) {
         res.send({
             code: 1,
@@ -80,25 +86,9 @@ router.post('/api/article/deleteArticle', async (req, res) => {
     }
 });
 
-// 编辑文章
-const updateArticle = async (req) => {
-    const {id, abstract, title, img, content, contentMD, tags} = req.body;
-    return await db.articleInfo.update({id}, {
-        $set: {
-            abstract,
-            title,
-            img,
-            updateTime: moment().format('YYYY-MM-DD HH:mm'),
-            content,
-            contentMD,
-            tags
-        }
-    });
-};
-
 // 更新文章（更新内容包含文章标题/更新时间/更新内容/文章图片/文章摘要）
 router.post('/api/article/updateArticle', async (req, res) => {
-    await updateArticle(req).then(async req => {
+    await util.updateArticle(req).then(async req => {
         if (req.ok === 1) {
             const data = await db.articleInfo.find();
             res.send({
@@ -112,6 +102,23 @@ router.post('/api/article/updateArticle', async (req, res) => {
             })
         }
     })
+});
+
+// 获取所有文章
+router.get('/api/article/getAllArticle', async (req, res) => {
+    const articleArr = await util.getAllArticle();
+    console.log(articleArr);
+    if (_.isEmpty(articleArr)) {
+        res.send({
+            code: 1,
+            data: [],
+        })
+    } else {
+        res.send({
+            code: 0,
+            data: articleArr
+        })
+    }
 });
 
 
