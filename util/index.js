@@ -55,5 +55,5 @@ module.exports = {
     getArticle,
     getArticleClass,
     updateArticle,
-    getAllArticle
+    getAllArticle,
 };

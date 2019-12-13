@@ -41,10 +41,18 @@ const articleClassSchema = new mongoose.Schema({
     desc: String
 });
 
+// 文章标签表
+const articleTagsSchema = new mongoose.Schema({
+    id: String,
+    name: String,
+    type: String
+});
+
 const db = {
     userInfo: mongoose.model("userInfo", User),
     articleInfo: mongoose.model("articleInfo", articleSchema),
-    articleClassInfo: mongoose.model('articleClassInfo',articleClassSchema)
+    articleClassInfo: mongoose.model('articleClassInfo',articleClassSchema),
+    articleTags: mongoose.model('articleTags',articleTagsSchema)
 };
 
 module.exports = db;

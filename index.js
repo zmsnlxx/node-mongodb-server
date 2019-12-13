@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const user = require("./interface/user");
 const article = require("./interface/article");
 const articleClass = require('./interface/articleClass');
+const articleTags = require('./interface/articleTags');
+
 
 const cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
@@ -16,6 +18,7 @@ app.use(cookieParser());
 app.use(user);
 app.use(article);
 app.use(articleClass);
+app.use(articleTags);
 
 http.createServer(app).listen(3000, () => {
     console.log("服务器已开启");
