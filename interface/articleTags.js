@@ -18,7 +18,7 @@ router.post('/api/tags/addArticleTags', async (req, res) => {
         if (!_.isEmpty(req)) {
             res.send({
                 code: 0,
-                data
+                data: _.reverse(_.cloneDeep(data))
             })
         }
     })
@@ -35,7 +35,7 @@ router.get('/api/tags/getArticleTags', async (req, res) => {
     } else {
         res.send({
             code: 0,
-            data: articleTags
+            data: _.reverse(_.cloneDeep(articleTags))
         })
     }
 });
@@ -47,7 +47,7 @@ router.post('/api/tags/deleteArticleTags', async (req, res) => {
         const data = await db.articleTags.find();
         res.send({
             code: 0,
-            data
+            data: _.reverse(_.cloneDeep(data))
         })
     } else {
         res.send({

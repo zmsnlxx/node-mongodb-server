@@ -20,7 +20,7 @@ function setRandomId() {
 
 // 获取指定分类的文章
 function getArticle(params) {
-    return db.articleInfo.find({tags:params})
+    return db.articleInfo.find({categoryId:params})
 }
 
 // 获取所有文章分类
@@ -35,7 +35,7 @@ function getAllArticle() {
 
 // 编辑文章
 async function updateArticle(req) {
-    const {id, abstract, title, img, content, contentMD, tags} = req.body;
+    const {id, abstract, title, img, content, contentMD, tagId, categoryName, categoryId, tagName} = req.body;
     return await db.articleInfo.update({id}, {
         $set: {
             abstract,
@@ -44,7 +44,12 @@ async function updateArticle(req) {
             updateTime: moment().format('YYYY-MM-DD HH:mm'),
             content,
             contentMD,
-            tags
+            tagId,
+            categoryName,
+            categoryId,
+            tagName,
+            visitNum: 0,   // 访问量
+            fabulousNum: 0,    // 点赞数
         }
     });
 }

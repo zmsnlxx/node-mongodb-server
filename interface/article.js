@@ -121,5 +121,22 @@ router.get('/api/article/getAllArticle', async (req, res) => {
     }
 });
 
+// 获取包含指定标签的文章
+router.get('/api/article/getTagArticle', async (req, res) => {
+    const articleArr = await db.articleInfo.find({tagId: req.query.id});
+    console.log(articleArr);
+    if (_.isEmpty(articleArr)) {
+        res.send({
+            code: 1,
+            data: [],
+        })
+    } else {
+        res.send({
+            code: 0,
+            data: articleArr
+        })
+    }
+});
+
 
 module.exports = router;
