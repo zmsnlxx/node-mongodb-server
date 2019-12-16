@@ -19,7 +19,7 @@ router.post("/api/user/register", (req, res) => {
             } else {
                 const newUser = new db.userInfo({
                     name: req.body.name,
-                    password: req.body.pass,
+                    password: req.body.password,
                     email: req.body.email,
                 });
                 newUser.save(function (err) {
@@ -47,6 +47,7 @@ router.post("/api/user/login", (req, res) => {
         },
         (err, data) => {
             if (data) {
+                console.log(data);
                 if (data.password === req.body.password) {
                     res.cookie("email", util.CodeCookie(data.email), {
                         //有效期，单位是秒
