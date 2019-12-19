@@ -38,7 +38,7 @@ router.post("/api/user/register", (req, res) => {
             }
         }
     )
-})
+});
 
 // 登录接口
 router.post("/api/user/login", (req, res) => {
@@ -47,7 +47,6 @@ router.post("/api/user/login", (req, res) => {
         },
         (err, data) => {
             if (data) {
-                console.log(data);
                 if (data.password === req.body.password) {
                     res.cookie("email", util.CodeCookie(data.email), {
                         //有效期，单位是秒

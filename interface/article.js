@@ -15,14 +15,14 @@ router.post('/api/article/addArticle', (req, res) => {
         abstract: req.body.abstract,    // 文章摘要
         createdTime: moment().format('YYYY-MM-DD HH:mm'),     // 创建时间
         content: req.body.content,      // 文章内容
-        img: req.body.img,              // 文章图片显示
-        contentMD: req.body.contentMD,   //
-
+        img: req.body.img,              // 文章封面图片
+        contentMD: req.body.contentMD,  // 文章内容
+        author: req.body.author,        // 作者
         categoryName: req.body.categoryName,           // 分类name
         categoryId: req.body.categoryId, // 分类id
         tagName: req.body.tagName,    // 标签name
         tagId: req.body.tagId,      // 标签id
-        visitNum: 0,   // 访问量
+        commentNum: 0,   // 访问量
         fabulousNum: 0,    // 点赞数
     });
     newArticle.save().then(async (req) => {
@@ -107,7 +107,6 @@ router.post('/api/article/updateArticle', async (req, res) => {
 // 获取所有文章
 router.get('/api/article/getAllArticle', async (req, res) => {
     const articleArr = await util.getAllArticle();
-    console.log(articleArr);
     if (_.isEmpty(articleArr)) {
         res.send({
             code: 1,
@@ -124,7 +123,6 @@ router.get('/api/article/getAllArticle', async (req, res) => {
 // 获取包含指定标签的文章
 router.get('/api/article/getTagArticle', async (req, res) => {
     const articleArr = await db.articleInfo.find({tagId: req.query.id});
-    console.log(articleArr);
     if (_.isEmpty(articleArr)) {
         res.send({
             code: 1,

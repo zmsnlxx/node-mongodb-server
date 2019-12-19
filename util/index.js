@@ -35,11 +35,12 @@ function getAllArticle() {
 
 // 编辑文章
 async function updateArticle(req) {
-    const {id, abstract, title, img, content, contentMD, tagId, categoryName, categoryId, tagName} = req.body;
+    const {id, abstract, title, img, content, contentMD, tagId, categoryName, categoryId, tagName, author} = req.body;
     return await db.articleInfo.update({id}, {
         $set: {
             abstract,
             title,
+            author,
             img,
             updateTime: moment().format('YYYY-MM-DD HH:mm'),
             content,
@@ -48,7 +49,7 @@ async function updateArticle(req) {
             categoryName,
             categoryId,
             tagName,
-            visitNum: 0,   // 访问量
+            commentNum: 0,   // 访问量
             fabulousNum: 0,    // 点赞数
         }
     });

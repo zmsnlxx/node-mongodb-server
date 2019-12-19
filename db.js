@@ -19,19 +19,20 @@ const User = new mongoose.Schema({
 // 文章详情表
 const articleSchema = new mongoose.Schema({
     id: String,     // id
+    author: String, // 作者
     title: String,  // 文章标题
     createdTime: String,   // 创建时间
     updateTime: String,     // 更新时间
     abstract: String,       // 摘要
-    categoryName: String,           // 分类name
+    categoryName: String,   // 分类name
     categoryId: String, // 分类id
     tagName: Array,    // 标签name
     tagId: Array,      // 标签id
-    visitNum: Number,   // 访问量
-    fabulousNum: Number,    // 点赞数
-    img: String, // 文章图片
-    content: String, // 转换过后的html
-    contentMD: String // markdown
+    commentNum: Number,   // 评论数量
+    fabulousNum: Number,    // 点赞数量
+    img: String, // 文章封面图片
+    content: String, // 转换过后的文章内容
+    contentMD: String // markdown格式的文章内容
 });
 
 // 文章分类表
