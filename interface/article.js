@@ -86,9 +86,20 @@ router.post('/api/article/deleteArticle', async (req, res) => {
     }
 });
 
+// 编辑文章
+async function updateArticle(req) {
+    const { id } = req.body;
+    if(req.body.fabulousNum) {
+        const {fabulousNum} = await db.articleInfo.findOne({id});
+        req.body.fabulousNum = fabulousNum + 1;
+    }
+    const result = Object.assign(req.body, {updateTime: moment().format('YYYY-MM-DD HH:mm') });
+    return await db.articleInfo.update({id}, { $set: result });
+}
+
 // 更新文章（更新内容包含文章标题/更新时间/更新内容/文章图片/文章摘要）
 router.post('/api/article/updateArticle', async (req, res) => {
-    await util.updateArticle(req).then(async req => {
+    await updateArticle(req).then(async req => {
         if (req.ok === 1) {
             const data = await db.articleInfo.find();
             res.send({

@@ -33,33 +33,10 @@ function getAllArticle() {
     return db.articleInfo.find()
 }
 
-// 编辑文章
-async function updateArticle(req) {
-    const {id, abstract, title, img, content, contentMD, tagId, categoryName, categoryId, tagName, author} = req.body;
-    return await db.articleInfo.update({id}, {
-        $set: {
-            abstract,
-            title,
-            author,
-            img,
-            updateTime: moment().format('YYYY-MM-DD HH:mm'),
-            content,
-            contentMD,
-            tagId,
-            categoryName,
-            categoryId,
-            tagName,
-            commentNum: 0,   // 访问量
-            fabulousNum: 0,    // 点赞数
-        }
-    });
-}
-
 module.exports = {
     CodeCookie,
     setRandomId,
     getArticle,
     getArticleClass,
-    updateArticle,
     getAllArticle,
 };
