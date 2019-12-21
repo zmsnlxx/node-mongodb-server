@@ -89,9 +89,13 @@ router.post('/api/article/deleteArticle', async (req, res) => {
 // 编辑文章
 async function updateArticle(req) {
     const { id } = req.body;
+    const {fabulousNum, commentData} = await db.articleInfo.findOne({id});
     if(req.body.fabulousNum) {
-        const {fabulousNum} = await db.articleInfo.findOne({id});
         req.body.fabulousNum = fabulousNum + 1;
+    }
+    if (req.body.comment) {
+        commentData.push(Object.assign({id: util.setRandomId()},req.body.comment));
+        req.body.commentData = commentData
     }
     const result = Object.assign(req.body, {updateTime: moment().format('YYYY-MM-DD HH:mm') });
     return await db.articleInfo.update({id}, { $set: result });

@@ -28,7 +28,7 @@ const articleSchema = new mongoose.Schema({
     categoryId: String, // 分类id
     tagName: Array,    // 标签name
     tagId: Array,      // 标签id
-    commentNum: Number,   // 评论数量
+    commentData: Array,   // 评论数据
     fabulousNum: Number,    // 点赞数量
     img: String, // 文章封面图片
     content: String, // 转换过后的文章内容
