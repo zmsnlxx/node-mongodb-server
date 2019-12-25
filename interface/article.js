@@ -93,8 +93,15 @@ async function updateArticle(req) {
     if(req.body.fabulousNum) {
         req.body.fabulousNum = fabulousNum + 1;
     }
+    // 如果有评论数据
     if (req.body.comment) {
-        commentData.push(Object.assign({id: util.setRandomId()},req.body.comment));
+        // 如果评论数据中含有id则更新
+        if(_.get(req.body.comment, 'commentId')) {
+            const currentCommentIndex = _.findIndex(commentData, item => item.id === _.get(req.body.comment, 'commentId'));
+            commentData[currentCommentIndex]['reply'].push(Object.assign({id: util.setRandomId()},req.body.comment))
+        } else {
+            commentData.push(Object.assign({id: util.setRandomId()},req.body.comment));
+        }
         req.body.commentData = commentData
     }
     const result = Object.assign(req.body, {updateTime: moment().format('YYYY-MM-DD HH:mm') });
