@@ -49,11 +49,26 @@ const articleTagsSchema = new mongoose.Schema({
     type: String
 });
 
+// 留言表
+const leavingAMessageSchema = new mongoose.Schema({
+    comment: String,
+    email: String,
+    getBrowse: String,
+    getOS: String,
+    id: String,
+    name: String,
+    reply: Array,
+    time: String,
+    url: String,
+    userId: String
+});
+
 const db = {
     userInfo: mongoose.model("userInfo", User),
     articleInfo: mongoose.model("articleInfo", articleSchema),
     articleClassInfo: mongoose.model('articleClassInfo',articleClassSchema),
-    articleTags: mongoose.model('articleTags',articleTagsSchema)
+    articleTags: mongoose.model('articleTags',articleTagsSchema),
+    leavingAMessage: mongoose.model('leavingAMessage',leavingAMessageSchema)
 };
 
 module.exports = db;
