@@ -60,7 +60,8 @@ const leavingAMessageSchema = new mongoose.Schema({
     reply: Array,
     time: String,
     url: String,
-    userId: String
+    userId: String,
+    fabulousNum: Number
 });
 
 const db = {

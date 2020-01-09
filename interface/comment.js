@@ -24,7 +24,8 @@ router.post('/api/comment/addComment', (req, res) => {
         name,
         reply: [],
         url,
-        userId
+        userId,
+        fabulousNum: 0
     });
     newComment.save().then(async (req) => {
         const data = await db.leavingAMessage.find();
@@ -39,8 +40,16 @@ router.post('/api/comment/addComment', (req, res) => {
 
 // 更新留言（回复留言）
 router.post('/api/comment/updateComment', async (req, res) => {
-    const {id, reply} = req.body;
-    await db.leavingAMessage.update({id}, {$push: {'reply': reply}}).then(async req => {
+    const {id, reply, fabulousNum } = req.body;
+    let result = {};
+    if (reply && Object.keys(reply).length !== 0) {
+        result = {$push: {'reply': reply}};
+    }
+    if (fabulousNum) {
+        const num = await db.leavingAMessage.findOne({id})['fabulousNum'];
+        result = {$set: { fabulousNum: num + 1 }}
+    }
+    await db.leavingAMessage.update({id}, result).then(async req => {
         if (req.ok === 1) {
             const data = await db.leavingAMessage.find();
             res.send({
