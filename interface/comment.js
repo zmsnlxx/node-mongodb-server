@@ -46,7 +46,8 @@ router.post('/api/comment/updateComment', async (req, res) => {
         result = {$push: {'reply': reply}};
     }
     if (fabulousNum) {
-        const num = await db.leavingAMessage.findOne({id})['fabulousNum'];
+        const currentMessage = await db.leavingAMessage.find({id});
+        const num = _.get(currentMessage, '0.fabulousNum');
         result = {$set: { fabulousNum: num + 1 }}
     }
     await db.leavingAMessage.update({id}, result).then(async req => {
