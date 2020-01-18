@@ -21,8 +21,8 @@ const articleSchema = new mongoose.Schema({
     id: String,     // id
     author: String, // 作者
     title: String,  // 文章标题
-    createdTime: String,   // 创建时间
-    updateTime: String,     // 更新时间
+    createdTime: Number,   // 创建时间
+    updateTime: Number,     // 更新时间
     abstract: String,       // 摘要
     categoryName: String,   // 分类name
     categoryId: String, // 分类id
@@ -58,7 +58,7 @@ const leavingAMessageSchema = new mongoose.Schema({
     id: String,
     name: String,
     reply: Array,
-    time: String,
+    time: Number,
     url: String,
     userId: String,
     fabulousNum: Number

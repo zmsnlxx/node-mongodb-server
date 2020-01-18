@@ -16,7 +16,7 @@ router.post('/api/comment/addComment', (req, res) => {
     const {comment, email, getBrowse, getOS, name, url, userId} = req.body;
     const newComment = new db.leavingAMessage({
         id: util.setRandomId(),
-        time: moment().format('YYYY-MM-DD HH:mm'),
+        time: new Date().getTime(),
         comment,
         email,
         getBrowse,

@@ -4,7 +4,6 @@ const router = express.Router();
 const db = require("../db");
 const util = require('../util');
 const _ = require('lodash');
-const moment = require('moment');
 
 
 // 文章新增
@@ -13,7 +12,8 @@ router.post('/api/article/addArticle', (req, res) => {
         id: util.setRandomId(),         // 文章id
         title: req.body.title,          // 文章标题
         abstract: req.body.abstract,    // 文章摘要
-        createdTime: moment().format('YYYY-MM-DD HH:mm'),     // 创建时间
+        createdTime: new Date().getTime(),     // 创建时间
+        updateTime: new Date().getTime(),
         content: req.body.content,      // 文章内容
         img: req.body.img,              // 文章封面图片
         contentMD: req.body.contentMD,  // 文章内容
@@ -88,7 +88,7 @@ router.post('/api/article/deleteArticle', async (req, res) => {
 
 // 编辑文章
 async function updateArticle(req) {
-    const { id } = req.body;
+    const { id, isUpdate } = req.body;
     const {fabulousNum, commentData} = await db.articleInfo.findOne({id});
     if(req.body.fabulousNum) {
         req.body.fabulousNum = fabulousNum + 1;
@@ -104,7 +104,7 @@ async function updateArticle(req) {
         }
         req.body.commentData = commentData
     }
-    const result = Object.assign(req.body, {updateTime: moment().format('YYYY-MM-DD HH:mm') });
+    const result = isUpdate ? Object.assign(req.body, {updateTime: new Date().getTime() }) : req.body;
     return await db.articleInfo.update({id}, { $set: result });
 }
 
